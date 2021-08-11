@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"./lib/rest"
+//	"./lib/kafka/consumer"
 )
 
 
@@ -11,6 +12,12 @@ func main() {
 
 	fmt.Println("Starting EAIST uas2.0 test client")
 
-	rest.NewRest()
+	r, _ := rest.NewRest()
+
+	r.GetLotList(1)
+
+	//kc := consumer.NewConsumer()
+
+	//kc.ListTopics()
 
 }

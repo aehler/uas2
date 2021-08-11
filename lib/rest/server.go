@@ -20,3 +20,7 @@ func NewRest() (*Rest, error) {
 		Alive: true,
 	}, nil
 }
+
+func (r *Rest) GetLotList(id uint) {
+	client.GetLotList(id)
+}
