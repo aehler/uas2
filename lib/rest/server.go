@@ -2,6 +2,10 @@ package rest
 
 import ("fmt"
 	"./client"
+	"os"
+	"os/signal"
+	"syscall"
+	"log"
 )
 
 type Rest struct {
@@ -22,5 +26,24 @@ func NewRest() (*Rest, error) {
 }
 
 func (r *Rest) GetLotList(id uint) {
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan,
+		syscall.SIGHUP,
+		syscall.SIGINT,
+		syscall.SIGTERM,
+		syscall.SIGQUIT)
+
 	client.GetLotList(id)
+
+
+	for {
+		s := <-sigChan
+		switch s {
+		case os.Signal(syscall.SIGHUP):
+			log.Printf("graceful shutdown from signal: %v\n", s)
+		default:
+			log.Fatalf("exiting from signal: %v\n", s)
+		}
+	}
 }

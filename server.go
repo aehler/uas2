@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"./lib/rest"
-//	"./lib/kafka/consumer"
+	//"./lib/kafka/consumer"
 )
 
 
@@ -16,7 +16,7 @@ func main() {
 
 	r.GetLotList(1)
 
-	//kc := consumer.NewConsumer()
+	//consumer.TestConn()
 
 	//kc.ListTopics()
 

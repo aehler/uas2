@@ -7,9 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"encoding/json"
-	"os"
-	"os/signal"
-	"syscall"
+	"io/ioutil"
 )
 
 var (
@@ -21,19 +19,12 @@ var (
 func NewClient() {
 	clnt = config.Data.RestAddress
 	httpc = httpclient.New(clnt)
-	token = "64253be6-370a-44f4-bc95-707964de9f54"
+	token = "64253be6-370a-44f4-bc95-707964de9f54" //This is a temp token from Auth method
 }
 
 func Listen() {
 
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan,
-		syscall.SIGHUP,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-		syscall.SIGQUIT)
-
-	go func() {
+	func() {
 
 		fmt.Println("Starting listener on 8089")
 
@@ -43,22 +34,21 @@ func Listen() {
 
 	}()
 
-	for {
-		s := <-sigChan
-		switch s {
-		case os.Signal(syscall.SIGHUP):
-			log.Printf("graceful shutdown from signal: %v\n", s)
-		default:
-			log.Fatalf("exiting from signal: %v\n", s)
-		}
-	}
-
-
 }
 
 func lh(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(r)
+
+	htmlData, err := ioutil.ReadAll(r.Body) //<--- here!
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(string(htmlData))
+
 
 }
 
@@ -95,9 +85,10 @@ func ConnectAndAuth() {
 
 func GetLotList(id uint) {
 
+
 	fmt.Println("Getting GetLotById ", id)
 
-	Listen()
+	go Listen()
 
 	req, err := httpc.Get(fmt.Sprintf("/GetLotList"))
 
@@ -128,8 +119,12 @@ func GetLotList(id uint) {
 
 	if err := json.Unmarshal(r.Body, &jr); err == nil {
 
+		log.Println(jr, string(r.Body))
+
 	} else {
 		log.Fatalln("Error parsing response", err)
 	}
+
+
 
 }
