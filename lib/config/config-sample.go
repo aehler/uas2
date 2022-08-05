@@ -1,7 +1,7 @@
 package config
 
-//Uncomment, rename to config.go (optional) set your creds and run
-/*
+//rename to config.go (optional) set your creds and run
+
 type Config struct {
 	KafkaAddressPool []string
 	SaslPWD string
@@ -26,4 +26,4 @@ var Data = Config{
 	SaslPWD: "",
 
 }
-*/
+
